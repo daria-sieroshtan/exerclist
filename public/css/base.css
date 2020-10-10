@@ -1,0 +1,32 @@
+body {
+    padding-top: 80px;
+    padding-bottom: 70px;
+}
+
+.sub-header {
+    padding: 10px;
+    margin: 5px;
+    white-space: nowrap;
+}
+
+.page-footer{
+    margin: 0 -15px;
+}
+
+/*pagination*/
+.page-item.active .page-link{
+    border-color: #343a40;
+}
+
+.alert {
+    margin: 0 -15px;
+}
+
+label.required:after {
+    content: "* ";
+    color: red;
+}
+
+.badge-wrap.badge {
+    white-space: normal;
+}

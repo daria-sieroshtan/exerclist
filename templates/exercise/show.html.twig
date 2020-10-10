@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block heading %}Exercise{% endblock %}
+
+{% block content %}
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ exercise.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ exercise.name }}</td>
+            </tr>
+            <tr>
+                <th>Intervals</th>
+                <td>{{ exercise.intervals }}</td>
+            </tr>
+            <tr>
+                <th>Is private</th>
+                <td>{{ exercise.isPrivate ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+               <th>Tags</th>
+                <td>{{ exercise.tags | join(', ') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('exercise_index') }}" class="btn btn-dark mr-2" role="button"><span class="fa fa-arrow-left text-white" aria-hidden="true" title="back to list"></span></a>
+    <a href="{{ path('exercise_edit', {'id' : exercise.id}) }}" class="btn btn-dark mr-2" role="button"><span class="fa fa-pencil text-white" aria-hidden="true" title="edit"></span></a>
+    <a href="{{ path('exercise_delete', {'id' : exercise.id}) }}" class="entity-delete btn btn-dark" role="button"  ><span class="fa fa-trash-o text-white" aria-hidden="true" title="delete"></span></a>
+
+{% endblock %}

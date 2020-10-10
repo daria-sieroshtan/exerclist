@@ -32,7 +32,7 @@ class Track
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isPrivate;
+    private $isPrivate = false;
 
     /**
      * @ORM\ManyToMany(targetEntity=TrackTag::class, inversedBy="tracks")

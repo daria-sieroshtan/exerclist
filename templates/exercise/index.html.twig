@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{%block heading %}
+    Exercises
+
+{% endblock %}
+
+{% block content %}
+    <a href="{{ path('exercise_new') }}" class="btn btn-danger mb-3" role="button"><span class="fa fa-plus text-white" aria-hidden="true" title="view"></span>&nbsp;Create new</a>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Intervals</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for exercise in exercises %}
+            <tr {{ exercise.isPrivate ? 'class="private-row"' : ''}}>
+                <td>{{ exercise.id }}</td>
+                <td>{{ exercise.name }}{{ exercise.isPrivate ? '<span class="badge badge-dark ml-3"><span class="fa fa-eye-slash text-white" aria-hidden="true"></span>&nbsp;private</span>' : '' | raw }}</td>
+                <td>{{ exercise.intervals }}</td>
+                <td>
+                    <a href="{{ path('exercise_show', {'id' : exercise.id}) }}" class="btn btn-dark mr-2" role="button"><span class="fa fa-eye text-white" aria-hidden="true" title="view"></span></a>
+                    <a href="{{ path('exercise_edit', {'id' : exercise.id}) }}" class="btn btn-dark mr-2" role="button"><span class="fa fa-pencil text-white" aria-hidden="true" title="edit"></span></a>
+                    <a href="{{ path('exercise_delete', {'id' : exercise.id}) }}" class="entity-delete btn btn-dark" role="button"  ><span class="fa fa-trash-o text-white" aria-hidden="true" title="delete"></span></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

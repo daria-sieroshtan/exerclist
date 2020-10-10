@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block heading %}Workouts{% endblock %}
+
+{% block content %}
+    <a href="{{ path('workout_new') }}" class="btn btn-danger mb-3" role="button"><span class="fa fa-plus text-white" aria-hidden="true" title="view"></span>&nbsp;Create new</a>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Duration</th>
+            <th>Exercises</th>
+            <th>Tags</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for workout in workouts %}
+            <tr>
+                <td>{{ workout.id }}</td>
+                <td>{{ workout.name }}{{ workout.isPrivate ? '<span class="badge badge-dark ml-3"><span class="fa fa-eye-slash text-white" aria-hidden="true"></span>&nbsp;private</span>' : '' | raw }}</td>
+                <td>{{ workout.getDuration() }} min</td>
+                <td>{{ workout.exercises | length }}</td>
+                <td><div class="text-muted">tags here</div> </td>
+                <td>
+                    <a href="{{ path('workout_show', {'id' : workout.id}) }}" class="btn btn-dark mr-2" role="button"><span class="fa fa-eye text-white" aria-hidden="true" title="view"></span></a>
+                    <a href="{{ path('workout_edit', {'id' : workout.id}) }}" class="btn btn-dark mr-2" role="button"><span class="fa fa-pencil text-white" aria-hidden="true" title="edit"></span></a>
+                    <a href="{{ path('workout_delete', {'id' : workout.id}) }}" class="entity-delete btn btn-dark" role="button"  ><span class="fa fa-trash-o text-white" aria-hidden="true" title="delete"></span></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

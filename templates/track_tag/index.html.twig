@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block heading %}Track Tags{% endblock %}
+
+{% block content %}
+    <a href="{{ path('track_tag_new') }}" class="btn btn-danger mb-3" role="button"><span class="fa fa-plus text-white" aria-hidden="true" title="view"></span>&nbsp;Create new</a>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th># of tracks</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for track_tag in track_tags %}
+            <tr>
+                <td>{{ track_tag.id }}</td>
+                <td>{{ track_tag.name }}{{ track_tag.isPrivate ? '<span class="badge badge-dark ml-3"><span class="fa fa-eye-slash text-white" aria-hidden="true"></span>&nbsp;private</span>' : '' | raw }}</td>
+                <td>{{ track_tag.tracks | length }}</td>
+                <td>
+                    <a href="{{ path('track_tag_show', {'id' : track_tag.id}) }}" class="btn btn-dark mr-2" role="button"><span class="fa fa-eye text-white" aria-hidden="true" title="view"></span></a>
+                    <a href="{{ path('track_tag_edit', {'id' : track_tag.id}) }}" class="btn btn-dark mr-2" role="button"><span class="fa fa-pencil text-white" aria-hidden="true" title="edit"></span></a>
+                    <a href="{{ path('track_tag_delete', {'id' : track_tag.id}) }}" class="entity-delete btn btn-dark" role="button"  ><span class="fa fa-trash-o text-white" aria-hidden="true" title="delete"></span></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -30,7 +30,7 @@ class Playlist
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isPrivate;
+    private $isPrivate = false;
 
     public function getId(): ?int
     {

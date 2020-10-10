@@ -27,7 +27,7 @@ class ExerciseTag
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isPrivate;
+    private $isPrivate = false;
 
     /**
      * @ORM\ManyToMany(targetEntity=Exercise::class, mappedBy="tags")
@@ -37,6 +37,11 @@ class ExerciseTag
     public function __construct()
     {
         $this->exercises = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->name;
     }
 
     public function getId(): ?int

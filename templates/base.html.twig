@@ -2,11 +2,96 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        <title>{% block title %}Exerclist{% endblock %}</title>
+        <link rel='shortcut icon' href='/img/exercise-icon-16327.ico'/>
+
+        {% block stylesheets %}
+            {#bootstrap#}
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+            {#Font Awesome#}
+            <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+            {# Google Fonts#}
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+            {#custom css#}
+            <link rel="stylesheet" href="/css/base.css?{{ asset_version }}">
+        {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+    {% block body %}
+        <div class="container-fluid">
+            {% block navbar %}
+
+                <nav class="navbar navbar-light bg-white fixed-top border-bottom">
+                    <a class="navbar-brand text-dark" href="{{ path('home') }}">
+                        <img src="/img/exercise-icon-16327.png" width="30" height="30" alt="" class="d-inline-block align-top">
+                        &nbsp;Exerclist
+                    </a>
+                    <ul class="navbar nav justify-content-end">
+                        <li class="nav-item">
+                            <a href="{{ path('home') }}" class="btn btn-rounded btn-danger mr-3" role="button">
+                                <span class="fa fa-fire text-white" aria-hidden="true"></span>&nbsp;Exercise now</a>
+                        </li>
+{#                        <li class="nav-item">#}
+{#                            <a class="nav-link text-dark" href="{{ path('offer_list', {'userId' : app.user.id}) }}">{% trans %}webpage.navbar.offer_list{% endtrans %}</a>#}
+{#                        </li>#}
+                        <li class="nav-item dropdown mr-3">
+                            <a class="nav-link dropdown-toggle text-dark" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" >Workout</a>
+                            <div class="dropdown-menu mr-3">
+                                <a class="dropdown-item " href="{{ path('workout_index') }}">Workouts</a>
+                                <a class="dropdown-item " href="{{ path('exercise_index') }}">Exercises</a>
+                                <a class="dropdown-item " href="{{ path('exercise_tag_index') }}">Tags</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown mr-3">
+                            <a class="nav-link dropdown-toggle text-dark" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" >Music</a>
+                            <div class="dropdown-menu mr-3">
+                                <a class="dropdown-item " href="{{ path('playlist_index') }}">Playlists</a>
+                                <a class="dropdown-item " href="{{ path('track_index') }}">Tracks</a>
+                                <a class="dropdown-item " href="{{ path('track_tag_index') }}">Tags</a>
+                            </div>
+                        </li>
+
+{# draft for user-times #}
+{#                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}#}
+{#                            <li class="nav-item dropdown">#}
+{#                                <a class="nav-link dropdown-toggle text-dark mr-3" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" >{{ app.user.name }} </a>#}
+{#                                <div class="dropdown-menu mr-3" style="right: 0; left: auto;">#}
+{#                                    <a class="dropdown-item" href="{{ path('profile_name_edit', {'id' : app.user.id}) }}">Profile</a>#}
+{#                                    <a class="dropdown-item " href="{{ path('profile_password_change', {'id' : app.user.id}) }}">Password</a>#}
+{#                                    <hr>#}
+{#                                    <a class="dropdown-item " href="{{ path('logout') }}"><span class="fa fa-sign-out" aria-hidden="true"></span>&nbsp;Signout</a>#}
+{#                                </div>#}
+{#                            </li>#}
+{#                        {%  endif %}#}
+                    </ul>
+                </nav>
+            {% endblock %}
+
+            {% block flashes %}
+                {{ include('flashes.html.twig') }}
+            {% endblock %}
+
+            {% block page_heading %}
+                <div class="row " >
+                    <h2 class="sub-header text-center">{% block heading %}{% endblock %}</h2>
+                </div>
+            {% endblock %}
+
+            {% block content %}
+            {% endblock %}
+
+        </div>
+    {% endblock %}
+    {% block javascripts %}
+        {#external libraries#}
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="crossorigin="anonymous"></script>
+
+        {#  custom   #}
+        <script src="/js/add_picture_fix_script.js?{{ asset_version }}"></script>
+        <script src="/js/entity_delete.js?{{ asset_version }}"></script>
+    {% endblock %}
     </body>
 </html>

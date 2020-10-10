@@ -23,11 +23,6 @@ class Workout
     private $name;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $duration;
-
-    /**
      * @ORM\Column(type="array")
      */
     private $exercises = [];
@@ -35,7 +30,7 @@ class Workout
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isPrivate;
+    private $isPrivate = false;
 
     public function getId(): ?int
     {
@@ -56,15 +51,9 @@ class Workout
 
     public function getDuration(): ?int
     {
-        return $this->duration;
+        return count($this->exercises);
     }
 
-    public function setDuration(int $duration): self
-    {
-        $this->duration = $duration;
-
-        return $this;
-    }
 
     public function getExercises(): ?array
     {

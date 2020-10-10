@@ -27,7 +27,7 @@ class TrackTag
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isPrivate;
+    private $isPrivate = false;
 
     /**
      * @ORM\ManyToMany(targetEntity=Track::class, mappedBy="tags")
@@ -37,6 +37,11 @@ class TrackTag
     public function __construct()
     {
         $this->tracks = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->name;
     }
 
     public function getId(): ?int
