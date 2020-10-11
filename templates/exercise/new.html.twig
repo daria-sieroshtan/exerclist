@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block heading %}Create new Exercise{% endblock %}
+
+{% block content %}
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <a href="{{ path('exercise_index') }}" class="btn btn-dark mr-2" role="button"><span class="fa fa-arrow-left text-white" aria-hidden="true" title="back to list"></span></a>
+    <button class="btn btn-danger mr-2">{{ button_label|default('Save') }}</button>
+    {{ form_end(form) }}
+
+{% endblock %}
+

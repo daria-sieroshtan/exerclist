@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block heading %}Edit Playlist{% endblock %}
+
+{% block content %}
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <a href="{{ path('playlist_index') }}" class="btn btn-dark mr-2" role="button"><span class="fa fa-arrow-left text-white" aria-hidden="true" title="back to list"></span></a>
+    <button class="btn btn-danger mr-2">{{ button_label|default('Save') }}</button>
+    <a href="{{ path('playlist_delete', {'id' : playlist.id}) }}" class="entity-delete btn btn-dark" role="button"  ><span class="fa fa-trash-o text-white" aria-hidden="true" title="delete"></span></a>
+    {{ form_end(form) }}
+
+{% endblock %}
+

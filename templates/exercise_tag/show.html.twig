@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block heading %}Exercise Tag{% endblock %}
+
+{% block content %}
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ exercise_tag.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ exercise_tag.name }}</td>
+            </tr>
+            <tr>
+                <th>IsPrivate</th>
+                <td>{{ exercise_tag.isPrivate ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th># of exercises</th>
+                <td>{{ exercise_tag.exercises | length }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('exercise_tag_index') }}" class="btn btn-dark mr-2" role="button"><span class="fa fa-arrow-left text-white" aria-hidden="true" title="back to list"></span></a>
+    <a href="{{ path('exercise_tag_edit', {'id' : exercise_tag.id}) }}" class="btn btn-dark mr-2" role="button"><span class="fa fa-pencil text-white" aria-hidden="true" title="edit"></span></a>
+    <a href="{{ path('exercise_tag_delete', {'id' : exercise_tag.id}) }}" class="entity-delete btn btn-dark" role="button"  ><span class="fa fa-trash-o text-white" aria-hidden="true" title="delete"></span></a>
+
+{% endblock %}
