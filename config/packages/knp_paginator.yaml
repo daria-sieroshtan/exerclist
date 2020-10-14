@@ -1,0 +1,7 @@
+knp_paginator:
+  default_options:
+    page_out_of_range: 'fix'
+  template:
+    pagination: '/pagination/pagination.html.twig'     # sliding pagination controls template
+    sortable: '/pagination/font_awesome_sortable_link.html.twig' # sort link template
+    filtration: '@KnpPaginator/Pagination/filtration.html.twig'  # filters template

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -45,6 +47,46 @@ class User implements UserInterface
      * @ORM\Column(type="boolean")
      */
     private $isVerified = false;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Exercise::class, mappedBy="user")
+     */
+    private $exercises;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ExerciseTag::class, mappedBy="user")
+     */
+    private $exerciseTags;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Workout::class, mappedBy="user")
+     */
+    private $workouts;
+
+    /**
+     * @ORM\OneToMany(targetEntity=TrackTag::class, mappedBy="user")
+     */
+    private $trackTags;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Track::class, mappedBy="user")
+     */
+    private $tracks;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Playlist::class, mappedBy="user")
+     */
+    private $playlists;
+
+    public function __construct()
+    {
+        $this->exercises = new ArrayCollection();
+        $this->exerciseTags = new ArrayCollection();
+        $this->workouts = new ArrayCollection();
+        $this->trackTags = new ArrayCollection();
+        $this->tracks = new ArrayCollection();
+        $this->playlists = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -144,6 +186,192 @@ class User implements UserInterface
     public function setIsVerified(bool $isVerified): self
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Exercise[]
+     */
+    public function getExercises(): Collection
+    {
+        return $this->exercises;
+    }
+
+    public function addExercise(Exercise $exercise): self
+    {
+        if (!$this->exercises->contains($exercise)) {
+            $this->exercises[] = $exercise;
+            $exercise->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeExercise(Exercise $exercise): self
+    {
+        if ($this->exercises->contains($exercise)) {
+            $this->exercises->removeElement($exercise);
+            // set the owning side to null (unless already changed)
+            if ($exercise->getUser() === $this) {
+                $exercise->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ExerciseTag[]
+     */
+    public function getExerciseTags(): Collection
+    {
+        return $this->exerciseTags;
+    }
+
+    public function addExerciseTag(ExerciseTag $exerciseTag): self
+    {
+        if (!$this->exerciseTags->contains($exerciseTag)) {
+            $this->exerciseTags[] = $exerciseTag;
+            $exerciseTag->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeExerciseTag(ExerciseTag $exerciseTag): self
+    {
+        if ($this->exerciseTags->contains($exerciseTag)) {
+            $this->exerciseTags->removeElement($exerciseTag);
+            // set the owning side to null (unless already changed)
+            if ($exerciseTag->getUser() === $this) {
+                $exerciseTag->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Workout[]
+     */
+    public function getWorkouts(): Collection
+    {
+        return $this->workouts;
+    }
+
+    public function addWorkout(Workout $workout): self
+    {
+        if (!$this->workouts->contains($workout)) {
+            $this->workouts[] = $workout;
+            $workout->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWorkout(Workout $workout): self
+    {
+        if ($this->workouts->contains($workout)) {
+            $this->workouts->removeElement($workout);
+            // set the owning side to null (unless already changed)
+            if ($workout->getUser() === $this) {
+                $workout->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|TrackTag[]
+     */
+    public function getTrackTags(): Collection
+    {
+        return $this->trackTags;
+    }
+
+    public function addTrackTag(TrackTag $trackTag): self
+    {
+        if (!$this->trackTags->contains($trackTag)) {
+            $this->trackTags[] = $trackTag;
+            $trackTag->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTrackTag(TrackTag $trackTag): self
+    {
+        if ($this->trackTags->contains($trackTag)) {
+            $this->trackTags->removeElement($trackTag);
+            // set the owning side to null (unless already changed)
+            if ($trackTag->getUser() === $this) {
+                $trackTag->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Track[]
+     */
+    public function getTracks(): Collection
+    {
+        return $this->tracks;
+    }
+
+    public function addTrack(Track $track): self
+    {
+        if (!$this->tracks->contains($track)) {
+            $this->tracks[] = $track;
+            $track->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTrack(Track $track): self
+    {
+        if ($this->tracks->contains($track)) {
+            $this->tracks->removeElement($track);
+            // set the owning side to null (unless already changed)
+            if ($track->getUser() === $this) {
+                $track->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Playlist[]
+     */
+    public function getPlaylists(): Collection
+    {
+        return $this->playlists;
+    }
+
+    public function addPlaylist(Playlist $playlist): self
+    {
+        if (!$this->playlists->contains($playlist)) {
+            $this->playlists[] = $playlist;
+            $playlist->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlaylist(Playlist $playlist): self
+    {
+        if ($this->playlists->contains($playlist)) {
+            $this->playlists->removeElement($playlist);
+            // set the owning side to null (unless already changed)
+            if ($playlist->getUser() === $this) {
+                $playlist->setUser(null);
+            }
+        }
 
         return $this;
     }

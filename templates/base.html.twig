@@ -57,8 +57,8 @@
                                     <span class="fa fa-user mr-2" aria-hidden="true"></span>{{ app.user.name }}
                                 </a>
                                 <div class="dropdown-menu mr-3" style="right: 0; left: auto;">
-{#                                    <a class="dropdown-item" href="{{ path('profile_name_edit', {'id' : app.user.id}) }}">Profile</a>#}
-{#                                    <a class="dropdown-item " href="{{ path('profile_password_change', {'id' : app.user.id}) }}">Password</a>#}
+                                    <a class="dropdown-item" href="{{ path('user_edit', {'id' : app.user.id}) }}">Profile</a>
+                                    <a class="dropdown-item " href="{{ path('password_change', {'id' : app.user.id}) }}">Password</a>
                                     <hr>
                                     <a class="dropdown-item " href="{{ path('app_logout') }}"><span class="fa fa-sign-out" aria-hidden="true"></span>&nbsp;Signout</a>
                                 </div>

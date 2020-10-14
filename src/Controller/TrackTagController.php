@@ -5,10 +5,12 @@ namespace App\Controller;
 use App\Entity\TrackTag;
 use App\Form\TrackTagType;
 use App\Repository\TrackTagRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @Route("/track-tag")
@@ -16,19 +18,25 @@ use Symfony\Component\Routing\Annotation\Route;
 class TrackTagController extends BaseController
 {
     /**
-     * @Route("/", name="track_tag_index", methods={"GET"})
+     * @Route("/list/{page}/", defaults={"page"=1}, name="track_tag_index", methods={"GET"})
      */
-    public function index(TrackTagRepository $trackTagRepository): Response
+    public function index(TrackTagRepository $trackTagRepository, UserInterface $user, PaginatorInterface $paginator, $page): Response
     {
+        $pagination = $paginator->paginate(
+            $trackTagRepository->findListForPagination($user->getId()),
+            $page,
+            $this::ITEMS_PER_PAGE
+        );
+
         return $this->render('track_tag/index.html.twig', [
-            'track_tags' => $trackTagRepository->findAll(),
+            'pagination' => $pagination,
         ]);
     }
 
     /**
      * @Route("/new", name="track_tag_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, UserInterface $user): Response
     {
         $trackTag = new TrackTag();
         $form = $this->createForm(TrackTagType::class, $trackTag);
@@ -36,6 +44,7 @@ class TrackTagController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $trackTag = $form->getData();
+            $trackTag->setUser($user);
             $this->saveEntity($trackTag);
 
             $this->addSuccessFlash(sprintf('Successfully created track tag "%s"', $trackTag->getName()));
@@ -49,20 +58,12 @@ class TrackTagController extends BaseController
     }
 
     /**
-     * @Route("/{id}", name="track_tag_show", methods={"GET"})
-     */
-    public function show(TrackTag $trackTag): Response
-    {
-        return $this->render('track_tag/show.html.twig', [
-            'track_tag' => $trackTag,
-        ]);
-    }
-
-    /**
      * @Route("/{id}/edit", name="track_tag_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, TrackTag $trackTag): Response
     {
+        $this->restrictModifyAccess($trackTag);
+
         $form = $this->createForm(TrackTagType::class, $trackTag);
         $form->handleRequest($request);
 
@@ -83,11 +84,26 @@ class TrackTagController extends BaseController
     /**
      * @Route("/{id}/delete", name="track_tag_delete")
      */
-    public function delete(Request $request, TrackTag $trackTag): Response
+    public function delete(TrackTag $trackTag): Response
     {
+        $this->restrictModifyAccess($trackTag);
+
         $this->removeEntity($trackTag);
         $this->addSuccessFlash('Successfully deleted track tag.');
 
         return $this->redirectToRoute('track_tag_index');
+    }
+
+
+    /**
+     * @Route("/{id}", name="track_tag_show", methods={"GET"})
+     */
+    public function show(TrackTag $trackTag): Response
+    {
+        $this->restrictViewAccess($trackTag);
+
+        return $this->render('track_tag/show.html.twig', [
+            'track_tag' => $trackTag,
+        ]);
     }
 }

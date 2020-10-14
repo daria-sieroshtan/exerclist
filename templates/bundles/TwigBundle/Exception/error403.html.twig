@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <h1>Access denied</h1>
+
+            <p>
+                Looks like you do not have access rights for this page.
+            </p>
+            <p>
+
+                Maybe your have not verified your email address after registration? This could help.
+            </p>
+            <p>
+
+                <a href="{{ path('home') }}" class="text-danger">return to the homepage</a>.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

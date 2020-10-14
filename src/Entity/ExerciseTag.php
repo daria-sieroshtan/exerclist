@@ -34,6 +34,12 @@ class ExerciseTag
      */
     private $exercises;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="exerciseTags")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
     public function __construct()
     {
         $this->exercises = new ArrayCollection();
@@ -97,6 +103,18 @@ class ExerciseTag
             $this->exercises->removeElement($exercise);
             $exercise->removeTag($this);
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

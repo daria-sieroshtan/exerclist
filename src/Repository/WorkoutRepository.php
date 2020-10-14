@@ -19,6 +19,17 @@ class WorkoutRepository extends ServiceEntityRepository
         parent::__construct($registry, Workout::class);
     }
 
+    public function findListForPagination($userId)
+    {
+        return $this->createQueryBuilder('w')
+            ->andWhere('w.user = :val')
+            ->orWhere('w.isPrivate = 0')
+            ->setParameter('val', $userId)
+            ->orderBy('w.id', 'ASC')
+            ->getQuery()
+            ;
+    }
+
     // /**
     //  * @return Workout[] Returns an array of Workout objects
     //  */

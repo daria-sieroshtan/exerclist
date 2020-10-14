@@ -8,15 +8,15 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Name</th>
+                <th>{{ knp_pagination_sortable(pagination, 'ID', 'p.id') }}</th>
+                <th{% if pagination.isSorted('p.name') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Title', 'p.name') }}</th>
                 <th># of tracks</th>
                 <th>Tags</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-        {% for playlist in playlists %}
+        {% for playlist in pagination %}
             <tr>
                 <td>{{ playlist.id }}</td>
                 <td>{{ playlist.name }}{{ playlist.isPrivate ? '<span class="badge badge-dark ml-3"><span class="fa fa-eye-slash text-white" aria-hidden="true"></span>&nbsp;private</span>' : '' | raw }}</td>
@@ -24,8 +24,10 @@
                 <td><div class="text-muted">tags here</div> </td>
                 <td>
                     <a href="{{ path('playlist_show', {'id' : playlist.id}) }}" class="btn btn-dark mr-2" role="button"><span class="fa fa-eye text-white" aria-hidden="true" title="view"></span></a>
-                    <a href="{{ path('playlist_edit', {'id' : playlist.id}) }}" class="btn btn-dark mr-2" role="button"><span class="fa fa-pencil text-white" aria-hidden="true" title="edit"></span></a>
-                    <a href="{{ path('playlist_delete', {'id' : playlist.id}) }}" class="entity-delete btn btn-dark" role="button"  ><span class="fa fa-trash-o text-white" aria-hidden="true" title="delete"></span></a>
+                    {% if exercise.user.id == app.user.id %}
+                        <a href="{{ path('playlist_edit', {'id' : playlist.id}) }}" class="btn btn-dark mr-2" role="button"><span class="fa fa-pencil text-white" aria-hidden="true" title="edit"></span></a>
+                        <a href="{{ path('playlist_delete', {'id' : playlist.id}) }}" class="entity-delete btn btn-dark" role="button"  ><span class="fa fa-trash-o text-white" aria-hidden="true" title="delete"></span></a>
+                    {%  endif %}
                 </td>
             </tr>
         {% else %}
@@ -35,4 +37,9 @@
         {% endfor %}
         </tbody>
     </table>
+
+    <div class="navigation float-right mt-5">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+
 {% endblock %}

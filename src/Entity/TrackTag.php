@@ -34,6 +34,12 @@ class TrackTag
      */
     private $tracks;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="trackTags")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
     public function __construct()
     {
         $this->tracks = new ArrayCollection();
@@ -97,6 +103,18 @@ class TrackTag
             $this->tracks->removeElement($track);
             $track->removeTag($this);
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

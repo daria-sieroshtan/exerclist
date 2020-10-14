@@ -12,13 +12,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 //todo: timestamp & blameable for entities;
-//todo: pagination
-//todo: sorting in templates
 //todo: "only private" filter in templates
 //todo: proper workout & playlist creation
 
 class BaseController extends AbstractController
 {
+
+    const ITEMS_PER_PAGE = 10;
 
     /**
      * @param string $message
@@ -67,5 +67,19 @@ class BaseController extends AbstractController
     {
         $redirect = $request->headers->get('referer') ?? $this->generateUrl('home');
         return $redirect;
+    }
+
+    public function restrictViewAccess($entity)
+    {
+        if ($entity->getIsPrivate() && $entity->getUser() != $this->getUser()) {
+            throw $this->createAccessDeniedException();
+        }
+    }
+
+    public function restrictModifyAccess($entity)
+    {
+        if ($entity->getUser() != $this->getUser()) {
+            throw $this->createAccessDeniedException();
+        }
     }
 }

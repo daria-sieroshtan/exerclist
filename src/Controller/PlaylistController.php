@@ -5,10 +5,12 @@ namespace App\Controller;
 use App\Entity\Playlist;
 use App\Form\PlaylistType;
 use App\Repository\PlaylistRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @Route("/playlist")
@@ -16,19 +18,25 @@ use Symfony\Component\Routing\Annotation\Route;
 class PlaylistController extends BaseController
 {
     /**
-     * @Route("/", name="playlist_index", methods={"GET"})
+     * @Route("/list/{page}/", defaults={"page"=1}, name="playlist_index", methods={"GET"})
      */
-    public function index(PlaylistRepository $playlistRepository): Response
+    public function index(PlaylistRepository $playlistRepository, UserInterface $user, PaginatorInterface $paginator, $page): Response
     {
+        $pagination = $paginator->paginate(
+            $playlistRepository->findListForPagination($user->getId()),
+            $page,
+            $this::ITEMS_PER_PAGE
+        );
+
         return $this->render('playlist/index.html.twig', [
-            'playlists' => $playlistRepository->findAll(),
+            'pagination' => $pagination,
         ]);
     }
 
     /**
      * @Route("/new", name="playlist_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, UserInterface $user): Response
     {
         $playlist = new Playlist();
         $form = $this->createForm(PlaylistType::class, $playlist);
@@ -36,6 +44,7 @@ class PlaylistController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $playlist = $form->getData();
+            $playlist->setUser($user);
             $this->saveEntity($playlist);
 
             $this->addSuccessFlash(sprintf('Successfully created playlist "%s"', $playlist->getName()));
@@ -49,20 +58,12 @@ class PlaylistController extends BaseController
     }
 
     /**
-     * @Route("/{id}", name="playlist_show", methods={"GET"})
-     */
-    public function show(Playlist $playlist): Response
-    {
-        return $this->render('playlist/show.html.twig', [
-            'playlist' => $playlist,
-        ]);
-    }
-
-    /**
      * @Route("/{id}/edit", name="playlist_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Playlist $playlist): Response
     {
+        $this->restrictModifyAccess($playlist);
+
         $form = $this->createForm(PlaylistType::class, $playlist);
         $form->handleRequest($request);
 
@@ -83,11 +84,26 @@ class PlaylistController extends BaseController
     /**
      * @Route("/{id}/delete", name="playlist_delete")
      */
-    public function delete(Request $request, Playlist $playlist): Response
+    public function delete(Playlist $playlist): Response
     {
+        $this->restrictModifyAccess($playlist);
+
         $this->removeEntity($playlist);
         $this->addSuccessFlash('Successfully deleted playlist.');
 
         return $this->redirectToRoute('playlist_index');
+    }
+
+
+    /**
+     * @Route("/{id}", name="playlist_show", methods={"GET"})
+     */
+    public function show(Playlist $playlist): Response
+    {
+        $this->restrictViewAccess($playlist);
+
+        return $this->render('playlist/show.html.twig', [
+            'playlist' => $playlist,
+        ]);
     }
 }

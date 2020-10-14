@@ -19,6 +19,17 @@ class TrackRepository extends ServiceEntityRepository
         parent::__construct($registry, Track::class);
     }
 
+    public function findListForPagination($userId)
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.user = :val')
+            ->orWhere('t.isPrivate = 0')
+            ->setParameter('val', $userId)
+            ->orderBy('t.id', 'ASC')
+            ->getQuery()
+            ;
+    }
+
     // /**
     //  * @return Track[] Returns an array of Track objects
     //  */
