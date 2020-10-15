@@ -37,7 +37,7 @@ class UserController extends BaseController
      */
     public function changePassword(Request $request, UserPasswordEncoderInterface $passwordEncoder, User $user)
     {
-        if ($user != $this->getUser()) {
+        if ($user !== $this->getUser()) {
             throw $this->createAccessDeniedException();
         }
 
@@ -45,7 +45,7 @@ class UserController extends BaseController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $checkPass = $passwordEncoder->isPasswordValid($user, $form->get('oldPassword')->getData());
-            if ($checkPass === true) {
+            if ($checkPass) {
                 $user->setPassword(
                     $passwordEncoder->encodePassword(
                         $user,
@@ -58,7 +58,7 @@ class UserController extends BaseController
                 return $this->redirectToRoute('home');
             } else {
                 $this->addDangerFlash('Current password provided is invalid.');
-                return $this->redirectToRoute('profile_password_change', ['id' => $user->getId()]);
+                return $this->redirectToRoute('password_change', ['id' => $user->getId()]);
             }
         }
         return ['form' => $form->createView()] ;
@@ -72,7 +72,7 @@ class UserController extends BaseController
      */
     public function edit(Request $request, User $user)
     {
-        if ($user != $this->getUser()) {
+        if ($user !== $this->getUser()) {
             throw $this->createAccessDeniedException();
         }
 

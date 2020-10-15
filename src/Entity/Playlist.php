@@ -4,11 +4,12 @@ namespace App\Entity;
 
 use App\Repository\PlaylistRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=PlaylistRepository::class)
  */
-class Playlist
+class Playlist implements OwnableEntityInterface
 {
     /**
      * @ORM\Id
@@ -35,6 +36,7 @@ class Playlist
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="playlists")
      * @ORM\JoinColumn(nullable=false)
+     * @Gedmo\Blameable(on="create")
      */
     private $user;
 

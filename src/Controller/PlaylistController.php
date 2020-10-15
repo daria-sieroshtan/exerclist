@@ -44,7 +44,6 @@ class PlaylistController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $playlist = $form->getData();
-            $playlist->setUser($user);
             $this->saveEntity($playlist);
 
             $this->addSuccessFlash(sprintf('Successfully created playlist "%s"', $playlist->getName()));

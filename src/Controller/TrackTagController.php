@@ -44,7 +44,6 @@ class TrackTagController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $trackTag = $form->getData();
-            $trackTag->setUser($user);
             $this->saveEntity($trackTag);
 
             $this->addSuccessFlash(sprintf('Successfully created track tag "%s"', $trackTag->getName()));

@@ -6,11 +6,12 @@ use App\Repository\TrackRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=TrackRepository::class)
  */
-class Track
+class Track implements OwnableEntityInterface
 {
     /**
      * @ORM\Id
@@ -42,6 +43,7 @@ class Track
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="tracks")
      * @ORM\JoinColumn(nullable=false)
+     * @Gedmo\Blameable(on="create")
      */
     private $user;
 

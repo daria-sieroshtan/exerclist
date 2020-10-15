@@ -30,7 +30,7 @@ class RegistrationController extends BaseController
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
     {
         $user = new User();
-        $user->setRoles(['ROLE_USER']);
+        $user->setRoles(['ROLE_USER_UNVERIFIED']);
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 

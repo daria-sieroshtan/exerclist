@@ -4,11 +4,12 @@ namespace App\Entity;
 
 use App\Repository\WorkoutRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=WorkoutRepository::class)
  */
-class Workout
+class Workout implements OwnableEntityInterface
 {
     /**
      * @ORM\Id
@@ -35,6 +36,7 @@ class Workout
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="workouts")
      * @ORM\JoinColumn(nullable=false)
+     * @Gedmo\Blameable(on="create")
      */
     private $user;
 

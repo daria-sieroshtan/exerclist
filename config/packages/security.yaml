@@ -42,9 +42,9 @@ security:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/request_verification, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/verify/email, roles: ROLE_USER }
-        - { path: ^/, roles: ROLE_USER_VERIFIED }
+        - { path: ^/verify/email, roles: ROLE_USER_UNVERIFIED }
+        - { path: ^/, roles: ROLE_USER }
 
     role_hierarchy:
-        ROLE_ADMIN: ROLE_USER_VERIFIED
-        ROLE_USER_VERIFIED: ROLE_USER
+        ROLE_ADMIN: ROLE_USER
+        ROLE_USER: ROLE_USER_UNVERIFIED

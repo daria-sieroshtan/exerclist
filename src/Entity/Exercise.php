@@ -7,11 +7,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=ExerciseRepository::class)
  */
-class Exercise
+class Exercise implements OwnableEntityInterface
 {
     /**
      * @ORM\Id
@@ -45,6 +46,7 @@ class Exercise
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="exercises")
      * @ORM\JoinColumn(nullable=false)
+     * @Gedmo\Blameable(on="create")
      */
     private $user;
 

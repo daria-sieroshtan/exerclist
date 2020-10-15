@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class WorkoutController extends BaseController
 {
     /**
-     * @Route("/list/{page}/", name="workout_index", methods={"GET"})
+     * @Route("/list/{page}/", defaults={"page"=1},name="workout_index", methods={"GET"})
      */
     public function index(WorkoutRepository $workoutRepository, UserInterface $user, PaginatorInterface $paginator, $page): Response
     {
@@ -44,7 +44,6 @@ class WorkoutController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $workout = $form->getData();
-            $workout->setUser($user);
             $this->saveEntity($workout);
 
             $this->addSuccessFlash(sprintf('Successfully created workout "%s"', $workout->getName()));
@@ -105,5 +104,4 @@ class WorkoutController extends BaseController
             'workout' => $workout,
         ]);
     }
-
 }

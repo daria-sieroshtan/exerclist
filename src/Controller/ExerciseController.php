@@ -43,7 +43,6 @@ class ExerciseController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $exercise = $form->getData();
-            $exercise->setUser($user);
             $this->saveEntity($exercise);
 
             $this->addSuccessFlash(sprintf('Successfully created exercise "%s"', $exercise->getName()));

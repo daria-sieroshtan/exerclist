@@ -44,7 +44,6 @@ class ExerciseTagController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $exerciseTag = $form->getData();
-            $exerciseTag->setUser($user);
             $this->saveEntity($exerciseTag);
 
             $this->addSuccessFlash(sprintf('Successfully created exercise tag "%s"', $exerciseTag->getName()));

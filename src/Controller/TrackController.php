@@ -44,7 +44,6 @@ class TrackController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $track = $form->getData();
-            $track->setUser($user);
             $this->saveEntity($track);
 
             $this->addSuccessFlash(sprintf('Successfully created track "%s"', $track->getName()));

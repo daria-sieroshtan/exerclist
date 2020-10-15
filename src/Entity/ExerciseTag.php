@@ -6,11 +6,12 @@ use App\Repository\ExerciseTagRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=ExerciseTagRepository::class)
  */
-class ExerciseTag
+class ExerciseTag implements OwnableEntityInterface
 {
     /**
      * @ORM\Id
@@ -37,6 +38,7 @@ class ExerciseTag
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="exerciseTags")
      * @ORM\JoinColumn(nullable=false)
+     * @Gedmo\Blameable(on="create")
      */
     private $user;
 

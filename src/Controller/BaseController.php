@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\OwnableEntityInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,6 +15,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 //todo: timestamp & blameable for entities;
 //todo: "only private" filter in templates
 //todo: proper workout & playlist creation
+//todo: exercise now page
 
 class BaseController extends AbstractController
 {
@@ -69,16 +71,16 @@ class BaseController extends AbstractController
         return $redirect;
     }
 
-    public function restrictViewAccess($entity)
+    public function restrictViewAccess(OwnableEntityInterface $entity)
     {
-        if ($entity->getIsPrivate() && $entity->getUser() != $this->getUser()) {
+        if ($entity->getIsPrivate() && $entity->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
         }
     }
 
-    public function restrictModifyAccess($entity)
+    public function restrictModifyAccess(OwnableEntityInterface $entity)
     {
-        if ($entity->getUser() != $this->getUser()) {
+        if ($entity->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
         }
     }
