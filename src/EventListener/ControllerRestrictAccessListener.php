@@ -15,9 +15,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class ControllerRestrictAccessListener
 {
-    /** @var Reader */
     private $reader;
-
     private $security;
 
     /**
@@ -73,14 +71,14 @@ class ControllerRestrictAccessListener
 
     public function restrictViewAccess(OwnableEntityInterface $entity, UserInterface $user)
     {
-        if ($entity->getIsPrivate() && $entity->getUser() !== $user) {
+        if ($entity->getIsPrivate() && !$entity->getUser()->isEqualTo($user)) {
             throw new AccessDeniedException('Access Denied.');
         }
     }
 
     public function restrictModifyAccess(OwnableEntityInterface $entity, UserInterface $user)
     {
-        if ($entity->getUser() !== $user) {
+        if (!$entity->getUser()->isEqualTo($user)) {
             throw new AccessDeniedException('Access Denied.');
         }
     }

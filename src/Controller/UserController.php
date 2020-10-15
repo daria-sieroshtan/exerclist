@@ -37,7 +37,7 @@ class UserController extends BaseController
      */
     public function changePassword(Request $request, UserPasswordEncoderInterface $passwordEncoder, User $user)
     {
-        if ($user !== $this->getUser()) {
+        if (!$user->isEqualTo($this->getUser())) {
             throw $this->createAccessDeniedException();
         }
 
@@ -72,7 +72,7 @@ class UserController extends BaseController
      */
     public function edit(Request $request, User $user)
     {
-        if ($user !== $this->getUser()) {
+        if (!$user->isEqualTo($this->getUser())) {
             throw $this->createAccessDeniedException();
         }
 
