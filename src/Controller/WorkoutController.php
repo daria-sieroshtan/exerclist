@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Annotation\RestrictAccess;
 use App\Entity\Workout;
 use App\Form\WorkoutType;
 use App\Repository\WorkoutRepository;
@@ -58,11 +59,10 @@ class WorkoutController extends BaseController
 
     /**
      * @Route("/{id}/edit", name="workout_edit", methods={"GET","POST"})
+     * @RestrictAccess(write=true)
      */
     public function edit(Request $request, Workout $workout): Response
     {
-        $this->restrictModifyAccess($workout);
-
         $form = $this->createForm(WorkoutType::class, $workout);
         $form->handleRequest($request);
 
@@ -82,11 +82,10 @@ class WorkoutController extends BaseController
 
     /**
      * @Route("/{id}/delete", name="workout_delete")
+     * @RestrictAccess(write=true)
      */
     public function delete(Workout $workout): Response
     {
-        $this->restrictModifyAccess($workout);
-
         $this->removeEntity($workout);
         $this->addSuccessFlash('Successfully deleted workout.');
 
@@ -95,11 +94,10 @@ class WorkoutController extends BaseController
 
     /**
      * @Route("/{id}", name="workout_show", methods={"GET"})
+     * @RestrictAccess
      */
     public function show(Workout $workout): Response
     {
-        $this->restrictViewAccess($workout);
-
         return $this->render('workout/show.html.twig', [
             'workout' => $workout,
         ]);

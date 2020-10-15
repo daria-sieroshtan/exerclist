@@ -70,18 +70,4 @@ class BaseController extends AbstractController
         $redirect = $request->headers->get('referer') ?? $this->generateUrl('home');
         return $redirect;
     }
-
-    public function restrictViewAccess(OwnableEntityInterface $entity)
-    {
-        if ($entity->getIsPrivate() && $entity->getUser() !== $this->getUser()) {
-            throw $this->createAccessDeniedException();
-        }
-    }
-
-    public function restrictModifyAccess(OwnableEntityInterface $entity)
-    {
-        if ($entity->getUser() !== $this->getUser()) {
-            throw $this->createAccessDeniedException();
-        }
-    }
 }

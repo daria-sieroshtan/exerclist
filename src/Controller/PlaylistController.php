@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Annotation\RestrictAccess;
 use App\Entity\Playlist;
 use App\Form\PlaylistType;
 use App\Repository\PlaylistRepository;
@@ -58,11 +59,10 @@ class PlaylistController extends BaseController
 
     /**
      * @Route("/{id}/edit", name="playlist_edit", methods={"GET","POST"})
+     * @RestrictAccess(write=true)
      */
     public function edit(Request $request, Playlist $playlist): Response
     {
-        $this->restrictModifyAccess($playlist);
-
         $form = $this->createForm(PlaylistType::class, $playlist);
         $form->handleRequest($request);
 
@@ -82,11 +82,10 @@ class PlaylistController extends BaseController
 
     /**
      * @Route("/{id}/delete", name="playlist_delete")
+     * @RestrictAccess(write=true)
      */
     public function delete(Playlist $playlist): Response
     {
-        $this->restrictModifyAccess($playlist);
-
         $this->removeEntity($playlist);
         $this->addSuccessFlash('Successfully deleted playlist.');
 
@@ -96,11 +95,10 @@ class PlaylistController extends BaseController
 
     /**
      * @Route("/{id}", name="playlist_show", methods={"GET"})
+     * @RestrictAccess
      */
     public function show(Playlist $playlist): Response
     {
-        $this->restrictViewAccess($playlist);
-
         return $this->render('playlist/show.html.twig', [
             'playlist' => $playlist,
         ]);

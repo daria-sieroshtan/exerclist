@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Annotation\RestrictAccess;
 use App\Entity\Track;
 use App\Form\TrackType;
 use App\Repository\TrackRepository;
@@ -58,11 +59,10 @@ class TrackController extends BaseController
 
     /**
      * @Route("/{id}/edit", name="track_edit", methods={"GET","POST"})
+     * @RestrictAccess(write=true)
      */
     public function edit(Request $request, Track $track): Response
     {
-        $this->restrictModifyAccess($track);
-
         $form = $this->createForm(TrackType::class, $track);
         $form->handleRequest($request);
 
@@ -82,11 +82,10 @@ class TrackController extends BaseController
 
     /**
      * @Route("/{id}/delete", name="track_delete")
+     * @RestrictAccess(write=true)
      */
     public function delete(Track $track): Response
     {
-        $this->restrictModifyAccess($track);
-
         $this->removeEntity($track);
         $this->addSuccessFlash('Successfully deleted track.');
 
@@ -97,11 +96,10 @@ class TrackController extends BaseController
 
     /**
      * @Route("/{id}", name="track_show", methods={"GET"})
+     * @RestrictAccess
      */
     public function show(Track $track): Response
     {
-        $this->restrictViewAccess($track);
-
         return $this->render('track/show.html.twig', [
             'track' => $track,
         ]);

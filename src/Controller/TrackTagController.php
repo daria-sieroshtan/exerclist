@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Annotation\RestrictAccess;
 use App\Entity\TrackTag;
 use App\Form\TrackTagType;
 use App\Repository\TrackTagRepository;
@@ -58,11 +59,10 @@ class TrackTagController extends BaseController
 
     /**
      * @Route("/{id}/edit", name="track_tag_edit", methods={"GET","POST"})
+     * @RestrictAccess(write=true)
      */
     public function edit(Request $request, TrackTag $trackTag): Response
     {
-        $this->restrictModifyAccess($trackTag);
-
         $form = $this->createForm(TrackTagType::class, $trackTag);
         $form->handleRequest($request);
 
@@ -82,11 +82,10 @@ class TrackTagController extends BaseController
 
     /**
      * @Route("/{id}/delete", name="track_tag_delete")
+     * @RestrictAccess(write=true)
      */
     public function delete(TrackTag $trackTag): Response
     {
-        $this->restrictModifyAccess($trackTag);
-
         $this->removeEntity($trackTag);
         $this->addSuccessFlash('Successfully deleted track tag.');
 
@@ -96,11 +95,10 @@ class TrackTagController extends BaseController
 
     /**
      * @Route("/{id}", name="track_tag_show", methods={"GET"})
+     * @RestrictAccess
      */
     public function show(TrackTag $trackTag): Response
     {
-        $this->restrictViewAccess($trackTag);
-
         return $this->render('track_tag/show.html.twig', [
             'track_tag' => $trackTag,
         ]);

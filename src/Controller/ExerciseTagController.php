@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Annotation\RestrictAccess;
 use App\Entity\ExerciseTag;
 use App\Form\ExerciseTagType;
 use App\Repository\ExerciseTagRepository;
@@ -58,11 +59,10 @@ class ExerciseTagController extends BaseController
 
     /**
      * @Route("/{id}/edit", name="exercise_tag_edit", methods={"GET","POST"})
+     * @RestrictAccess(write=true)
      */
     public function edit(Request $request, ExerciseTag $exerciseTag): Response
     {
-        $this->restrictModifyAccess($exerciseTag);
-
         $form = $this->createForm(ExerciseTagType::class, $exerciseTag);
         $form->handleRequest($request);
 
@@ -82,11 +82,10 @@ class ExerciseTagController extends BaseController
 
     /**
      * @Route("/{id}/delete", name="exercise_tag_delete")
+     * @RestrictAccess(write=true)
      */
     public function delete(ExerciseTag $exerciseTag): Response
     {
-        $this->restrictModifyAccess($exerciseTag);
-
         $this->removeEntity($exerciseTag);
         $this->addSuccessFlash('Successfully deleted exercise tag.');
 
@@ -96,11 +95,10 @@ class ExerciseTagController extends BaseController
 
     /**
      * @Route("/{id}", name="exercise_tag_show", methods={"GET"})
+     * @RestrictAccess
      */
     public function show(ExerciseTag $exerciseTag): Response
     {
-        $this->restrictViewAccess($exerciseTag);
-
         return $this->render('exercise_tag/show.html.twig', [
             'exercise_tag' => $exerciseTag,
         ]);

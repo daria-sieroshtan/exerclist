@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
+use App\Annotation\RestrictAccess;
 
 /**
  * @Route("/exercise")
@@ -57,11 +58,10 @@ class ExerciseController extends BaseController
 
     /**
      * @Route("/{id}/edit", name="exercise_edit", methods={"GET","POST"})
+     * @RestrictAccess(write=true)
      */
     public function edit(Request $request, Exercise $exercise): Response
     {
-        $this->restrictModifyAccess($exercise);
-
         $form = $this->createForm(ExerciseType::class, $exercise);
         $form->handleRequest($request);
 
@@ -81,11 +81,10 @@ class ExerciseController extends BaseController
 
     /**
      * @Route("/{id}/delete", name="exercise_delete")
+     * @RestrictAccess(write=true)
      */
     public function delete(Exercise $exercise): Response
     {
-        $this->restrictModifyAccess($exercise);
-
         $this->removeEntity($exercise);
         $this->addSuccessFlash('Successfully deleted exercise.');
 
@@ -95,11 +94,10 @@ class ExerciseController extends BaseController
 
     /**
      * @Route("/{id}", name="exercise_show", methods={"GET"})
+     * @RestrictAccess
      */
     public function show(Exercise $exercise): Response
     {
-        $this->restrictViewAccess($exercise);
-
         return $this->render('exercise/show.html.twig', [
             'exercise' => $exercise,
         ]);
