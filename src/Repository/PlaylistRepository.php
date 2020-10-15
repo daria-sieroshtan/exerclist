@@ -19,6 +19,17 @@ class PlaylistRepository extends ServiceEntityRepository
         parent::__construct($registry, Playlist::class);
     }
 
+    public function findListForPagination($userId)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.user = :val')
+            ->orWhere('p.isPrivate = 0')
+            ->setParameter('val', $userId)
+            ->orderBy('p.id', 'ASC')
+            ->getQuery()
+            ;
+    }
+
     // /**
     //  * @return Playlist[] Returns an array of Playlist objects
     //  */

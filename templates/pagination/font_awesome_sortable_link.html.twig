@@ -1,0 +1,16 @@
+{# based on @KnpPaginator/Pagination/twitter_bootstrap_v4_font_awesome_sortable_link.html.twig #}
+
+<a{% for attr, value  in options %} {{ attr }}="{{ value }}"{% endfor %}>
+    <span class="float-right">
+        {% if sorted %}
+            {% if direction == 'desc' %}
+                <i class="fa fa-sort-down text-dark"></i>
+            {% else %}
+                <i class="fa fa-sort-up text-dark"></i>
+            {% endif %}
+        {% else %}
+            <i class="fa fa-sort text-dark"></i>
+        {% endif %}
+    </span>
+    <span class="text-dark">{{ title }}</span>
+</a>

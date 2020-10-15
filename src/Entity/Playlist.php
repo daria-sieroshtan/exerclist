@@ -4,11 +4,12 @@ namespace App\Entity;
 
 use App\Repository\PlaylistRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=PlaylistRepository::class)
  */
-class Playlist
+class Playlist implements OwnableEntityInterface
 {
     /**
      * @ORM\Id
@@ -31,6 +32,13 @@ class Playlist
      * @ORM\Column(type="boolean")
      */
     private $isPrivate = false;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="playlists")
+     * @ORM\JoinColumn(nullable=false)
+     * @Gedmo\Blameable(on="create")
+     */
+    private $user;
 
     public function getId(): ?int
     {
@@ -69,6 +77,18 @@ class Playlist
     public function setIsPrivate(bool $isPrivate): self
     {
         $this->isPrivate = $isPrivate;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

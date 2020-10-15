@@ -2,13 +2,16 @@
 
 namespace App\Controller;
 
+use App\Annotation\RestrictAccess;
 use App\Entity\ExerciseTag;
 use App\Form\ExerciseTagType;
 use App\Repository\ExerciseTagRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @Route("/exercise-tag")
@@ -16,19 +19,25 @@ use Symfony\Component\Routing\Annotation\Route;
 class ExerciseTagController extends BaseController
 {
     /**
-     * @Route("/", name="exercise_tag_index", methods={"GET"})
+     * @Route("/list/{page}/", defaults={"page"=1}, name="exercise_tag_index", methods={"GET"})
      */
-    public function index(ExerciseTagRepository $exerciseTagRepository): Response
+    public function index(ExerciseTagRepository $exerciseTagRepository, UserInterface $user, PaginatorInterface $paginator, $page): Response
     {
+        $pagination = $paginator->paginate(
+            $exerciseTagRepository->findListForPagination($user->getId()),
+            $page,
+            $this::ITEMS_PER_PAGE
+        );
+
         return $this->render('exercise_tag/index.html.twig', [
-            'exercise_tags' => $exerciseTagRepository->findAll(),
+            'pagination' => $pagination,
         ]);
     }
 
     /**
      * @Route("/new", name="exercise_tag_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, UserInterface $user): Response
     {
         $exerciseTag = new ExerciseTag();
         $form = $this->createForm(ExerciseTagType::class, $exerciseTag);
@@ -49,17 +58,8 @@ class ExerciseTagController extends BaseController
     }
 
     /**
-     * @Route("/{id}", name="exercise_tag_show", methods={"GET"})
-     */
-    public function show(ExerciseTag $exerciseTag): Response
-    {
-        return $this->render('exercise_tag/show.html.twig', [
-            'exercise_tag' => $exerciseTag,
-        ]);
-    }
-
-    /**
      * @Route("/{id}/edit", name="exercise_tag_edit", methods={"GET","POST"})
+     * @RestrictAccess(write=true)
      */
     public function edit(Request $request, ExerciseTag $exerciseTag): Response
     {
@@ -82,12 +82,25 @@ class ExerciseTagController extends BaseController
 
     /**
      * @Route("/{id}/delete", name="exercise_tag_delete")
+     * @RestrictAccess(write=true)
      */
-    public function delete(Request $request, ExerciseTag $exerciseTag): Response
+    public function delete(ExerciseTag $exerciseTag): Response
     {
         $this->removeEntity($exerciseTag);
         $this->addSuccessFlash('Successfully deleted exercise tag.');
 
         return $this->redirectToRoute('exercise_tag_index');
+    }
+
+
+    /**
+     * @Route("/{id}", name="exercise_tag_show", methods={"GET"})
+     * @RestrictAccess
+     */
+    public function show(ExerciseTag $exerciseTag): Response
+    {
+        return $this->render('exercise_tag/show.html.twig', [
+            'exercise_tag' => $exerciseTag,
+        ]);
     }
 }

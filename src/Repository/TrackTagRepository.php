@@ -19,6 +19,17 @@ class TrackTagRepository extends ServiceEntityRepository
         parent::__construct($registry, TrackTag::class);
     }
 
+    public function findListForPagination($userId)
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.user = :val')
+            ->orWhere('t.isPrivate = 0')
+            ->setParameter('val', $userId)
+            ->orderBy('t.id', 'ASC')
+            ->getQuery()
+            ;
+    }
+
     // /**
     //  * @return TrackTag[] Returns an array of TrackTag objects
     //  */

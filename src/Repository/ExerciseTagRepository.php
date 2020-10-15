@@ -19,6 +19,17 @@ class ExerciseTagRepository extends ServiceEntityRepository
         parent::__construct($registry, ExerciseTag::class);
     }
 
+    public function findListForPagination($userId)
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.user = :val')
+            ->orWhere('e.isPrivate = 0')
+            ->setParameter('val', $userId)
+            ->orderBy('e.id', 'ASC')
+            ->getQuery()
+            ;
+    }
+
     // /**
     //  * @return ExerciseTag[] Returns an array of ExerciseTag objects
     //  */

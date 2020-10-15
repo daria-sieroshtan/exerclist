@@ -6,11 +6,12 @@ use App\Repository\TrackRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=TrackRepository::class)
  */
-class Track
+class Track implements OwnableEntityInterface
 {
     /**
      * @ORM\Id
@@ -38,6 +39,13 @@ class Track
      * @ORM\ManyToMany(targetEntity=TrackTag::class, inversedBy="tracks")
      */
     private $tags;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="tracks")
+     * @ORM\JoinColumn(nullable=false)
+     * @Gedmo\Blameable(on="create")
+     */
+    private $user;
 
     public function __construct()
     {
@@ -107,6 +115,18 @@ class Track
         if ($this->tags->contains($tag)) {
             $this->tags->removeElement($tag);
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

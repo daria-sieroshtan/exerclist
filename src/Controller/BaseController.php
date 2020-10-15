@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\OwnableEntityInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,13 +13,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 //todo: timestamp & blameable for entities;
-//todo: pagination
-//todo: sorting in templates
 //todo: "only private" filter in templates
 //todo: proper workout & playlist creation
+//todo: exercise now page
 
 class BaseController extends AbstractController
 {
+
+    const ITEMS_PER_PAGE = 10;
 
     /**
      * @param string $message

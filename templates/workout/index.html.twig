@@ -8,8 +8,8 @@
     <table class="table">
         <thead>
         <tr>
-            <th>Id</th>
-            <th>Name</th>
+            <th>{{ knp_pagination_sortable(pagination, 'ID', 'w.id') }}</th>
+            <th{% if pagination.isSorted('w.name') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Title', 'w.name') }}</th>
             <th>Duration</th>
             <th>Exercises</th>
             <th>Tags</th>
@@ -17,7 +17,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for workout in workouts %}
+        {% for workout in pagination %}
             <tr>
                 <td>{{ workout.id }}</td>
                 <td>{{ workout.name }}{{ workout.isPrivate ? '<span class="badge badge-dark ml-3"><span class="fa fa-eye-slash text-white" aria-hidden="true"></span>&nbsp;private</span>' : '' | raw }}</td>
@@ -26,8 +26,10 @@
                 <td><div class="text-muted">tags here</div> </td>
                 <td>
                     <a href="{{ path('workout_show', {'id' : workout.id}) }}" class="btn btn-dark mr-2" role="button"><span class="fa fa-eye text-white" aria-hidden="true" title="view"></span></a>
-                    <a href="{{ path('workout_edit', {'id' : workout.id}) }}" class="btn btn-dark mr-2" role="button"><span class="fa fa-pencil text-white" aria-hidden="true" title="edit"></span></a>
-                    <a href="{{ path('workout_delete', {'id' : workout.id}) }}" class="entity-delete btn btn-dark" role="button"  ><span class="fa fa-trash-o text-white" aria-hidden="true" title="delete"></span></a>
+                    {% if workout.user.id == app.user.id %}
+                        <a href="{{ path('workout_edit', {'id' : workout.id}) }}" class="btn btn-dark mr-2" role="button"><span class="fa fa-pencil text-white" aria-hidden="true" title="edit"></span></a>
+                        <a href="{{ path('workout_delete', {'id' : workout.id}) }}" class="entity-delete btn btn-dark" role="button"  ><span class="fa fa-trash-o text-white" aria-hidden="true" title="delete"></span></a>
+                    {%  endif %}
                 </td>
             </tr>
         {% else %}
@@ -37,4 +39,9 @@
         {% endfor %}
         </tbody>
     </table>
+
+    <div class="navigation float-right mt-5">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+
 {% endblock %}
