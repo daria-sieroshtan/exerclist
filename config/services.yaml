@@ -5,6 +5,9 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     asset_version: '%env(asset_version)%'
+    email_address: '%env(email_address)%'
+    email_name: '%env(email_name)%'
+
 
 services:
     # default configuration for services in *this* file

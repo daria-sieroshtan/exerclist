@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-8">
+                <h1 class="mb-3">
+                    Password Reset Email Sent
+                </h1>
+                <hr>
+                <p>An email has been sent that contains a link that you can click to reset your password. This link will expire in {{ tokenLifetime|date('g') }} hour(s).</p>
+                <p>If you don't receive an email please check your spam folder or <a href="{{ path('app_forgot_password_request') }}" class="text-danger">try again</a>.</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
