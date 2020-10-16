@@ -52,8 +52,7 @@ class RegistrationController extends BaseController
                 'app_verify_email',
                 $user,
                 (new TemplatedEmail())
-                    //    todo: refactor to global parameter
-                    ->from(new Address('rolendar.info@gmail.com', 'Exerclist Mail Bot'))
+                    ->from(new Address($this->getParameter('email_address'), $this->getParameter('email_name')))
                     ->to($user->getEmail())
                     ->subject('Please Confirm your Email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
