@@ -12,8 +12,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-//todo: timestamp & blameable for entities;
-//todo: "only private" filter in templates
 //todo: proper workout & playlist creation
 //todo: exercise now page
 
