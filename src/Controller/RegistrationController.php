@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -18,10 +19,12 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 class RegistrationController extends BaseController
 {
     private $emailVerifier;
+    private $userRepository;
 
-    public function __construct(EmailVerifier $emailVerifier)
+    public function __construct(EmailVerifier $emailVerifier, UserRepository $userRepository)
     {
         $this->emailVerifier = $emailVerifier;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -46,20 +49,10 @@ class RegistrationController extends BaseController
 
             $this->saveEntity($user);
 
-//            todo: extract method to service, use in "resend link"
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation(
-                'app_verify_email',
-                $user,
-                (new TemplatedEmail())
-                    ->from(new Address($this->getParameter('email_address'), $this->getParameter('email_name')))
-                    ->to($user->getEmail())
-                    ->subject('Please Confirm your Email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
-            );
-            // do anything else you need here, like send an email
+            $session = $request->getSession();
+            $session->set('email', $user->getEmail());
 
-            return $this->redirectToRoute('request_verification');
+            return $this->redirectToRoute('send_verification');
         }
 
         return $this->render('registration/register.html.twig', [
@@ -95,8 +88,41 @@ class RegistrationController extends BaseController
      * @Template("registration/request_verification.html.twig")
      *
      */
-    public function requestEmailVerification()
+    public function requestEmailVerification(Request $request)
     {
-        return [];
+        $session = $request->getSession();
+        $email = $session->get('email');
+
+        return ['email' => $email ?? null];
+    }
+
+    /**
+     * @Route("/send_verification",
+     *      name="send_verification",
+     *     )
+     */
+    public function sendEmailVerification(Request $request)
+    {
+        $session = $request->getSession();
+        $email = $session->get('email');
+
+        if (isset($email)) {
+            $user = $this->userRepository->findOneBy(["email" => $email]);
+        }
+
+        if (isset($user)) {
+            // generate a signed url and email it to the user
+            $this->emailVerifier->sendEmailConfirmation(
+                'app_verify_email',
+                $user,
+                (new TemplatedEmail())
+                    ->from(new Address($this->getParameter('email_address'), $this->getParameter('email_name')))
+                    ->to($user->getEmail())
+                    ->subject('Please Confirm your Email')
+                    ->htmlTemplate('registration/confirmation_email.html.twig')
+            );
+        }
+
+        return $this->redirectToRoute('request_verification');
     }
 }

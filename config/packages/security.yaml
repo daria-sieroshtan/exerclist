@@ -42,6 +42,7 @@ security:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/request_verification, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/send_verification, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/reset-password, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/reset-password/check-email, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/verify/email, roles: ROLE_USER_UNVERIFIED }
