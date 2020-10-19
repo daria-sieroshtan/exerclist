@@ -5,9 +5,69 @@
 {% block content %}
 
     {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <a href="{{ path('workout_index') }}" class="btn btn-dark mr-2" role="button"><span class="fa fa-arrow-left text-white" aria-hidden="true" title="back to list"></span></a>
-    <button class="btn btn-danger mr-2">{{ button_label|default('Save') }}</button>
+    {{ form_row(form.name) }}
+    {{ form_row(form.isPrivate) }}
+    <hr>
+    <h5>Exercises</h5>
+    <div class="row m-2">
+        <div class="col-4">
+            Title
+        </div>
+        <div class="col-1">
+            Index
+        </div>
+    </div>
+    <span class="embedded-form-wrapper"
+          data-prototype='
+            <div class="row m-2 embedded-form-item">
+                {{ form_errors(form.workoutExercises.vars.prototype)|e('html_attr') }}
+                <div class="col-4">
+                    {{ form_widget(form.workoutExercises.vars.prototype.exercise)|e('html_attr') }}
+                </div>
+                <div class="col-1">
+                    {{ form_widget(form.workoutExercises.vars.prototype.sequentialNumber)|e('html_attr') }}
+                </div>
+                <a href="#" class="remove-embedded-form-item pull-right">
+                    <span class="fa fa-close text-dark"></span>
+                </a>
+            </div>
+        '
+          data-index="{{ form.workoutExercises | length }}"
+    >
+        {% for exerciseForm in form.workoutExercises %}
+            <div class="row m-2 embedded-form-item">
+
+                {{ form_errors(exerciseForm) }}
+                <div class="col-4">
+                    {{ form_widget(exerciseForm.exercise) }}
+                </div>
+                <div class="col-1">
+                    {{ form_widget(exerciseForm.sequentialNumber) }}
+                </div>
+                <a href="#" class="remove-embedded-form-item pull-right">
+                    <span class="fa fa-close text-dark"></span>
+                </a>
+            </div>
+
+        {% endfor %}
+        <div class="row m-2" id="add-from-button-row">
+            <a href="#" class="embedded-form-add text-danger">
+                <span class="fa fa-plus-circle"></span>
+                Add Another Exercise
+            </a>
+        </div>
+    </span>
+
+    <a href="{{ path('workout_index') }}" class="btn btn-dark mr-2 my-2" role="button"><span class="fa fa-arrow-left text-white" aria-hidden="true" title="back to list"></span></a>
+    <button class="btn btn-danger mr-2 my-2">{{ button_label|default('Save') }}</button>
+    {# prevents weird label from showing up in new #}
+    {{ form_widget(form.workoutExercises) }}
     {{ form_end(form) }}
 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="/js/embedded_form.js?{{ asset_version }}"></script>
+    <script src="/js/embedded_form_initialize_row.js?{{ asset_version }}"></script>
 {% endblock %}

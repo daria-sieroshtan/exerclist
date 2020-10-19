@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\WorkoutRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -22,11 +24,6 @@ class Workout implements OwnableEntityInterface
      * @ORM\Column(type="string", length=255)
      */
     private $name;
-
-    /**
-     * @ORM\Column(type="array")
-     */
-    private $exercises = [];
 
     /**
      * @ORM\Column(type="boolean")
@@ -56,6 +53,21 @@ class Workout implements OwnableEntityInterface
      */
     private $updated;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity=WorkoutExercise::class,
+     *     mappedBy="workout",
+     *     orphanRemoval=true,
+     *     cascade={"persist"}
+     * )
+     */
+    private $workoutExercises;
+
+    public function __construct()
+    {
+        $this->workoutExercises = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -75,20 +87,7 @@ class Workout implements OwnableEntityInterface
 
     public function getDuration(): ?int
     {
-        return count($this->exercises);
-    }
-
-
-    public function getExercises(): ?array
-    {
-        return $this->exercises;
-    }
-
-    public function setExercises(array $exercises): self
-    {
-        $this->exercises = $exercises;
-
-        return $this;
+        return count($this->workoutExercises);
     }
 
     public function getIsPrivate(): ?bool
@@ -143,5 +142,74 @@ class Workout implements OwnableEntityInterface
         $this->updated = $updated;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|WorkoutExercise[]
+     */
+    public function getWorkoutExercises(): Collection
+    {
+        return $this->workoutExercises;
+    }
+
+    public function addWorkoutExercise(WorkoutExercise $workoutExercise): self
+    {
+        if (!$this->workoutExercises->contains($workoutExercise)) {
+            $this->workoutExercises[] = $workoutExercise;
+            $workoutExercise->setWorkout($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWorkoutExercise(WorkoutExercise $workoutExercise): self
+    {
+        if ($this->workoutExercises->contains($workoutExercise)) {
+            $this->workoutExercises->removeElement($workoutExercise);
+            // set the owning side to null (unless already changed)
+            if ($workoutExercise->getWorkout() === $this) {
+                $workoutExercise->setWorkout(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTags()
+    {
+        $tags = [];
+
+        foreach ($this->getWorkoutExercises() as $workoutExercise) {
+            $exerciseTags = $workoutExercise->getExercise()->getTags();
+            $tags = array_merge($tags, $exerciseTags->toArray());
+        }
+
+        return array_unique($tags);
+    }
+
+    public function getExercises()
+    {
+        $exercises = [];
+
+        foreach ($this->getWorkoutExercises() as $workoutExercise) {
+            $exercises = $this->insertItemIntoSequence($exercises, $workoutExercise->getSequentialNumber(), $workoutExercise->getExercise());
+        }
+
+        ksort($exercises);
+
+        return $exercises;
+    }
+
+    public function insertItemIntoSequence($list, $seqNumber, $item)
+    {
+        if (key_exists($seqNumber, $list)) {
+            return $this->insertItemIntoSequence($list, $seqNumber +1, $item );
+        } else {
+            $list[$seqNumber] = $item;
+            return $list;
+        }
     }
 }

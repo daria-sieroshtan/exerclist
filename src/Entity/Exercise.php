@@ -66,9 +66,20 @@ class Exercise implements OwnableEntityInterface
      */
     private $updated;
 
+    /**
+     * @ORM\OneToMany(targetEntity=WorkoutExercise::class, mappedBy="exercise")
+     */
+    private $workoutExercises;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
+        $this->workoutExercises = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return $this->name;
     }
 
     public function getId(): ?int
@@ -176,6 +187,37 @@ class Exercise implements OwnableEntityInterface
     public function setUpdated(\DateTimeInterface $updated): self
     {
         $this->updated = $updated;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|WorkoutExercise[]
+     */
+    public function getWorkoutExercises(): Collection
+    {
+        return $this->workoutExercises;
+    }
+
+    public function addWorkoutExercise(WorkoutExercise $workoutExercise): self
+    {
+        if (!$this->workoutExercises->contains($workoutExercise)) {
+            $this->workoutExercises[] = $workoutExercise;
+            $workoutExercise->setExercise($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWorkoutExercise(WorkoutExercise $workoutExercise): self
+    {
+        if ($this->workoutExercises->contains($workoutExercise)) {
+            $this->workoutExercises->removeElement($workoutExercise);
+            // set the owning side to null (unless already changed)
+            if ($workoutExercise->getExercise() === $this) {
+                $workoutExercise->setExercise(null);
+            }
+        }
 
         return $this;
     }

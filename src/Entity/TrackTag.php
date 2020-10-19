@@ -63,7 +63,7 @@ class TrackTag implements OwnableEntityInterface
         $this->tracks = new ArrayCollection();
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->name;
     }
