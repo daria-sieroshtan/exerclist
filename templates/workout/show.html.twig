@@ -5,30 +5,38 @@
 {% block content %}
     <table class="table">
         <tbody>
-        <tr>
-            <th>Id</th>
-            <td>{{ workout.id }}</td>
-        </tr>
-        <tr>
-            <th>Name</th>
-            <td>{{ workout.name }}</td>
-        </tr>
-        <tr>
-            <th>Is private</th>
-            <td>{{ workout.isPrivate ? 'Yes' : 'No' }}</td>
-        </tr>
-        <tr>
-            <th>Duration</th>
-            <td>{{ workout.getDuration() }} min</td>
-        </tr>
-        <tr>
-            <th>Exercises</th>
-            <td>{{ workout.Exercises | join(', ') }}</td>
-        </tr>
-        <tr>
-            <th>Tags</th>
-            <td><div class="text-muted">tags here</div> </td>
-        </tr>
+            <tr>
+                <th>Id</th>
+                <td>{{ workout.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ workout.name }}</td>
+            </tr>
+            <tr>
+                <th>Is private</th>
+                <td>{{ workout.isPrivate ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Duration</th>
+                <td>{{ workout.getDuration() }} min</td>
+            </tr>
+            <tr>
+                <th>Tags</th>
+                <td>{{ workout.getTags() | join(', ') }}</td>
+            </tr>
+            <tr>
+                <th>Exercises</th>
+                <td>
+                    {%  if workout.workoutExercises %}
+                        <ul>
+                            {% for exercise in workout.getExercises() %}
+                                <li>{{ exercise.name }}</li>
+                            {%  endfor %}
+                        </ul>
+                    {%  endif %}
+                </td>
+            </tr>
         </tbody>
     </table>
 

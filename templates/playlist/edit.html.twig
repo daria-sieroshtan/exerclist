@@ -5,11 +5,76 @@
 {% block content %}
 
     {{ form_start(form) }}
-    {{ form_widget(form) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.isPrivate) }}
+    <hr>
+    <h5>Tracks</h5>
+    <div class="row m-2">
+        <div class="col-4">
+            Title
+        </div>
+        <div class="col-1">
+            Index
+        </div>
+    </div>
+    <span class="embedded-form-wrapper"
+          data-prototype='
+            <div class="row m-2 embedded-form-item">
+                {{ form_errors(form.playlistTracks.vars.prototype)|e('html_attr') }}
+                <div class="col-4">
+                    {{ form_widget(form.playlistTracks.vars.prototype.track)|e('html_attr') }}
+                </div>
+                <div class="col-1">
+                    {{ form_widget(form.playlistTracks.vars.prototype.sequentialNumber)|e('html_attr') }}
+                </div>
+                <a href="#" class="remove-embedded-form-item pull-right">
+                    <span class="fa fa-close text-dark"></span>
+                </a>
+            </div>
+        '
+          data-index="{{ form.playlistTracks | length }}"
+    >
+        {% for playlistForm in form.playlistTracks %}
+            <div class="row m-2 embedded-form-item">
+
+                {{ form_errors(playlistForm) }}
+                <div class="col-4">
+                    {{ form_widget(playlistForm.track) }}
+                </div>
+                <div class="col-1">
+                    {{ form_widget(playlistForm.sequentialNumber) }}
+                </div>
+                <a href="#" class="remove-embedded-form-item pull-right">
+                    <span class="fa fa-close text-dark"></span>
+                </a>
+            </div>
+
+        {% endfor %}
+        <div class="row m-2" id="add-from-button-row">
+            <a href="#" class="embedded-form-add text-danger">
+                <span class="fa fa-plus-circle"></span>
+                Add Another Track
+            </a>
+        </div>
+    </span>
+
     <a href="{{ path('playlist_index') }}" class="btn btn-dark mr-2" role="button"><span class="fa fa-arrow-left text-white" aria-hidden="true" title="back to list"></span></a>
     <button class="btn btn-danger mr-2">{{ button_label|default('Save') }}</button>
     <a href="{{ path('playlist_delete', {'id' : playlist.id}) }}" class="entity-delete btn btn-dark" role="button"  ><span class="fa fa-trash-o text-white" aria-hidden="true" title="delete"></span></a>
+
+    {# prevents weird label from showing up in new #}
+    {% if not playlist.playlistTracks|length > 0 %}
+        {{ form_widget(form.playlistTracks) }}
+    {% endif %}
     {{ form_end(form) }}
 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        var label = 'playlist_playlistTracks_';
+    </script>
+    <script src="/js/embedded_form.js?{{ asset_version }}"></script>
 {% endblock %}
 

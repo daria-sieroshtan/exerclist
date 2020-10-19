@@ -30,6 +30,15 @@ class ExerciseRepository extends ServiceEntityRepository
             ;
     }
 
+    public function findListForWorkoutCreation($userId)
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.user = :val')
+            ->orWhere('e.isPrivate = 0')
+            ->setParameter('val', $userId)
+            ;
+    }
+
     // /**
     //  * @return Exercise[] Returns an array of Exercise objects
     //  */

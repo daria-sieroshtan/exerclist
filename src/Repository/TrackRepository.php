@@ -30,6 +30,15 @@ class TrackRepository extends ServiceEntityRepository
             ;
     }
 
+    public function findListForPlaylistCreation($userId)
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.user = :val')
+            ->orWhere('t.isPrivate = 0')
+            ->setParameter('val', $userId)
+            ;
+    }
+
     // /**
     //  * @return Track[] Returns an array of Track objects
     //  */

@@ -63,7 +63,7 @@ class ExerciseTag implements OwnableEntityInterface
         $this->exercises = new ArrayCollection();
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->name;
     }

@@ -63,9 +63,20 @@ class Track implements OwnableEntityInterface
      */
     private $updated;
 
+    /**
+     * @ORM\OneToMany(targetEntity=PlaylistTrack::class, mappedBy="track")
+     */
+    private $playlistTracks;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
+        $this->playlistTracks = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return $this->name;
     }
 
     public function getId(): ?int
@@ -173,6 +184,37 @@ class Track implements OwnableEntityInterface
     public function setUpdated(\DateTimeInterface $updated): self
     {
         $this->updated = $updated;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PlaylistTrack[]
+     */
+    public function getPlaylistTracks(): Collection
+    {
+        return $this->playlistTracks;
+    }
+
+    public function addPlaylistTrack(PlaylistTrack $playlistTrack): self
+    {
+        if (!$this->playlistTracks->contains($playlistTrack)) {
+            $this->playlistTracks[] = $playlistTrack;
+            $playlistTrack->setTrack($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlaylistTrack(PlaylistTrack $playlistTrack): self
+    {
+        if ($this->playlistTracks->contains($playlistTrack)) {
+            $this->playlistTracks->removeElement($playlistTrack);
+            // set the owning side to null (unless already changed)
+            if ($playlistTrack->getTrack() === $this) {
+                $playlistTrack->setTrack(null);
+            }
+        }
 
         return $this;
     }
