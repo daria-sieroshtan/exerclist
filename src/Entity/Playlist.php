@@ -3,6 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\PlaylistRepository;
+use App\Service\Helper;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -22,11 +25,6 @@ class Playlist implements OwnableEntityInterface
      * @ORM\Column(type="string", length=255)
      */
     private $name;
-
-    /**
-     * @ORM\Column(type="array")
-     */
-    private $tracks = [];
 
     /**
      * @ORM\Column(type="boolean")
@@ -56,6 +54,21 @@ class Playlist implements OwnableEntityInterface
      */
     private $updated;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity=PlaylistTrack::class,
+     *     mappedBy="playlist",
+     *     orphanRemoval=true,
+     *     cascade={"persist"}
+     * )
+     */
+    private $playlistTracks;
+
+    public function __construct()
+    {
+        $this->playlistTracks = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -69,18 +82,6 @@ class Playlist implements OwnableEntityInterface
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getTracks(): ?array
-    {
-        return $this->tracks;
-    }
-
-    public function setTracks(array $tracks): self
-    {
-        $this->tracks = $tracks;
 
         return $this;
     }
@@ -137,5 +138,65 @@ class Playlist implements OwnableEntityInterface
         $this->updated = $updated;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|PlaylistTrack[]
+     */
+    public function getPlaylistTracks(): Collection
+    {
+        return $this->playlistTracks;
+    }
+
+    public function addPlaylistTrack(PlaylistTrack $playlistTrack): self
+    {
+        if (!$this->playlistTracks->contains($playlistTrack)) {
+            $this->playlistTracks[] = $playlistTrack;
+            $playlistTrack->setPlaylist($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlaylistTrack(PlaylistTrack $playlistTrack): self
+    {
+        if ($this->playlistTracks->contains($playlistTrack)) {
+            $this->playlistTracks->removeElement($playlistTrack);
+            // set the owning side to null (unless already changed)
+            if ($playlistTrack->getPlaylist() === $this) {
+                $playlistTrack->setPlaylist(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTags()
+    {
+        $tags = [];
+
+        foreach ($this->getPlaylistTracks() as $playlistTrack) {
+            $trackTags = $playlistTrack->getTrack()->getTags();
+            $tags = array_merge($tags, $trackTags->toArray());
+        }
+
+        return array_unique($tags);
+    }
+
+    public function getTracks()
+    {
+        $tracks = [];
+        $helper = new Helper();
+
+        foreach ($this->getPlaylistTracks() as $playlistTrack) {
+            $tracks = $helper->insertItemIntoSequence($tracks, $playlistTrack->getSequentialNumber(), $playlistTrack->getTrack());
+        }
+
+        ksort($tracks);
+
+        return $tracks;
     }
 }

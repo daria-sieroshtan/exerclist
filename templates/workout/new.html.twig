@@ -68,6 +68,9 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script>
+        var label = 'workout_workoutExercises_';
+    </script>
     <script src="/js/embedded_form.js?{{ asset_version }}"></script>
     <script src="/js/embedded_form_initialize_row.js?{{ asset_version }}"></script>
 {% endblock %}

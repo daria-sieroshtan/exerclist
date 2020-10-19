@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\WorkoutRepository;
+use App\Service\Helper;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -193,23 +194,14 @@ class Workout implements OwnableEntityInterface
     public function getExercises()
     {
         $exercises = [];
+        $helper = new Helper();
 
         foreach ($this->getWorkoutExercises() as $workoutExercise) {
-            $exercises = $this->insertItemIntoSequence($exercises, $workoutExercise->getSequentialNumber(), $workoutExercise->getExercise());
+            $exercises = $helper->insertItemIntoSequence($exercises, $workoutExercise->getSequentialNumber(), $workoutExercise->getExercise());
         }
 
         ksort($exercises);
 
         return $exercises;
-    }
-
-    public function insertItemIntoSequence($list, $seqNumber, $item)
-    {
-        if (key_exists($seqNumber, $list)) {
-            return $this->insertItemIntoSequence($list, $seqNumber +1, $item );
-        } else {
-            $list[$seqNumber] = $item;
-            return $list;
-        }
     }
 }

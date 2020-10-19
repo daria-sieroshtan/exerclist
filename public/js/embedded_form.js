@@ -18,7 +18,7 @@ $(document).ready(function() {
         var newForm = prototype.replace(/__name__/g, index);
         $wrapper.data('index', index + 1);
         $('#add-from-button-row').before(newForm);
-        $('#workout_workoutExercises_' + index + '_sequentialNumber').val(1)
+        $('#' + label + index + '_sequentialNumber').val(1);
 
     });
 });
