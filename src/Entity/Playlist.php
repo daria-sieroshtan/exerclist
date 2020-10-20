@@ -188,15 +188,12 @@ class Playlist implements OwnableEntityInterface
 
     public function getTracks()
     {
+        $playlistTracks = $this->getPlaylistTracks()->toArray();
+        usort($playlistTracks, array("App\Helper", "compareItemsBySeqNumber"));
         $tracks = [];
-        $helper = new Helper();
-
-        foreach ($this->getPlaylistTracks() as $playlistTrack) {
-            $tracks = $helper->insertItemIntoSequence($tracks, $playlistTrack->getSequentialNumber(), $playlistTrack->getTrack());
+        foreach ($playlistTracks as $playlistTrack) {
+            $tracks[] = $playlistTrack->getTrack();
         }
-
-        ksort($tracks);
-
         return $tracks;
     }
 }
