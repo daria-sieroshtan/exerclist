@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=WorkoutExerciseRepository::class)
  */
-class WorkoutExercise
+class WorkoutExercise implements ItemOfSequenceInterface
 {
     /**
      * @ORM\Id

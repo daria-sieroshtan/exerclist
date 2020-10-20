@@ -193,15 +193,12 @@ class Workout implements OwnableEntityInterface
 
     public function getExercises()
     {
+        $workoutExercises = $this->getWorkoutExercises()->toArray();
+        usort($workoutExercises, array("App\Helper", "compareItemsBySeqNumber"));
         $exercises = [];
-        $helper = new Helper();
-
-        foreach ($this->getWorkoutExercises() as $workoutExercise) {
-            $exercises = $helper->insertItemIntoSequence($exercises, $workoutExercise->getSequentialNumber(), $workoutExercise->getExercise());
+        foreach ($workoutExercises as $workoutExercise) {
+            $exercises[] = $workoutExercise->getExercise();
         }
-
-        ksort($exercises);
-
         return $exercises;
     }
 }

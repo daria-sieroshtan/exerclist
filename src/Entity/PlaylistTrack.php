@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=PlaylistTrackRepository::class)
  */
-class PlaylistTrack
+class PlaylistTrack implements ItemOfSequenceInterface
 {
     /**
      * @ORM\Id
