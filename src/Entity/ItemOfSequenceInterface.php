@@ -8,5 +8,4 @@ interface ItemOfSequenceInterface
      * @return integer
      */
     public function getSequentialNumber();
-
 }

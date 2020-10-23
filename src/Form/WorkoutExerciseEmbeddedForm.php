@@ -24,20 +24,26 @@ class WorkoutExerciseEmbeddedForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('sequentialNumber', IntegerType::class,
+            ->add(
+                'sequentialNumber',
+                IntegerType::class,
                 [
                     'label' => 'index',
                     'attr' => ['min' => 1],
-                ])
-            ->add('exercise',EntityType::class,
+                ]
+            )
+            ->add(
+                'exercise',
+                EntityType::class,
                 [
                     'class' => Exercise::class,
                     'choice_label' => 'name',
                     'required' => false,
-                    'query_builder' => function(ExerciseRepository $repo) {
+                    'query_builder' => function (ExerciseRepository $repo) {
                         return $repo->findListForWorkoutCreation($this->userId);
                     }
-                ])
+                ]
+            )
         ;
     }
 
