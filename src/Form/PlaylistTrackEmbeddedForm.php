@@ -24,20 +24,26 @@ class PlaylistTrackEmbeddedForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('sequentialNumber', IntegerType::class,
+            ->add(
+                'sequentialNumber',
+                IntegerType::class,
                 [
                     'label' => 'index',
                     'attr' => ['min' => 1],
-                ])
-            ->add('track',EntityType::class,
+                ]
+            )
+            ->add(
+                'track',
+                EntityType::class,
                 [
                     'class' => Track::class,
                     'choice_label' => 'name',
                     'required' => false,
-                    'query_builder' => function(TrackRepository $repo) {
+                    'query_builder' => function (TrackRepository $repo) {
                         return $repo->findListForPlaylistCreation($this->userId);
                     }
-                ])
+                ]
+            )
         ;
     }
 

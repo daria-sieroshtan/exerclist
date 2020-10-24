@@ -16,7 +16,7 @@ class PlaylistType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('playlistTracks',CollectionType::class, [
+            ->add('playlistTracks', CollectionType::class, [
                 'entry_type' => PlaylistTrackEmbeddedForm::class,
                 'allow_delete' => true,
                 'allow_add' => true,
@@ -41,8 +41,8 @@ class PlaylistType extends AbstractType
     {
         $data = $event->getData();
         $data['playlistTracks'] = array_values($data['playlistTracks']);
-        foreach($data['playlistTracks'] as $key => $value) {
-            if(!array_key_exists('track', $value) || $value['track'] == "") {
+        foreach ($data['playlistTracks'] as $key => $value) {
+            if (!array_key_exists('track', $value) || $value['track'] == "") {
                 unset($data['playlistTracks'][$key]);
             }
         }

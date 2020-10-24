@@ -1,0 +1,86 @@
+version: 2.1
+executors:
+  docker-publisher:
+    environment:
+      IMAGE_NAME: dsier/exerclist
+    docker:
+      - image: circleci/buildpack-deps:stretch
+jobs:
+  build:
+    docker:
+      - image: circleci/php:7.2
+
+    steps:
+      - checkout
+
+      - run: sudo apt update
+      - run: sudo apt install make
+      - run: sudo docker-php-ext-install zip
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            # "composer.lock" can be used if it is committed to the repo
+            - v1-dependencies-{{ checksum "composer.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run: composer install -n --prefer-dist
+
+      - save_cache:
+          key: v1-dependencies-{{ checksum "composer.json" }}
+          paths:
+            - ./vendor
+
+      - run: make check_code_style
+      - setup_remote_docker
+      - run: docker build -f Dockerfile_CI -t exerclist .
+      - run: docker run -p 8000:8000 --network=host --name exerclist -d --rm exerclist
+      - run: make test
+  publish-wip:
+    executor: docker-publisher
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build Docker image
+          command: |
+            docker build -f Dockerfile_CI -t $IMAGE_NAME:wip .
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push $IMAGE_NAME:wip
+  publish-master:
+    executor: docker-publisher
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build Docker image
+          command: |
+            docker build -f Dockerfile_CI -t $IMAGE_NAME:master .
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push $IMAGE_NAME:master
+
+workflows:
+  version: 2.1
+  build-and-publish:
+    jobs:
+      - build
+      - publish-wip:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore: master
+      - publish-master:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
+

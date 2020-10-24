@@ -16,7 +16,7 @@ class WorkoutType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('workoutExercises',CollectionType::class, [
+            ->add('workoutExercises', CollectionType::class, [
                 'entry_type' => WorkoutExerciseEmbeddedForm::class,
                 'allow_delete' => true,
                 'allow_add' => true,
@@ -41,8 +41,8 @@ class WorkoutType extends AbstractType
     {
         $data = $event->getData();
         $data['workoutExercises'] = array_values($data['workoutExercises']);
-        foreach($data['workoutExercises'] as $key => $value) {
-            if(!array_key_exists('exercise', $value) || $value['exercise'] == "") {
+        foreach ($data['workoutExercises'] as $key => $value) {
+            if (!array_key_exists('exercise', $value) || $value['exercise'] == "") {
                 unset($data['workoutExercises'][$key]);
             }
         }

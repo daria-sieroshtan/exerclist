@@ -4,7 +4,7 @@ security_check:
 	symfony check:security
 
 test:
-	bin/phpunit
+	docker exec exerclist bin/phpunit
 
 check_code_style:
 	php vendor/bin/phpcs --standard=psr12 src/ -n

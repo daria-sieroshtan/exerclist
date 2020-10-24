@@ -7,6 +7,8 @@ RUN apt-get install php-mbstring php7.2-mbstring
 RUN wget https://get.symfony.com/cli/installer -O - | bash
 RUN mv /root/.symfony/bin/symfony /usr/local/bin/symfony
 
+COPY . /var/www/exerclist
+
 WORKDIR /var/www/exerclist
 
 EXPOSE 8000
