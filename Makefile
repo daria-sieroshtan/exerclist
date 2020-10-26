@@ -3,8 +3,13 @@ execute_dev_checks: security_check test check_code_style
 security_check:
 	symfony check:security
 
-test:
-	docker exec exerclist bin/phpunit
+test: unit_test functional_test
+
+unit_test:
+	docker exec exerclist bin/phpunit --group unit
+
+functional_test:
+	docker exec exerclist bin/phpunit --group functional
 
 check_code_style:
 	php vendor/bin/phpcs --standard=psr12 src/ -n
