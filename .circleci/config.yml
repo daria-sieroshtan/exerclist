@@ -8,7 +8,7 @@ executors:
 jobs:
   build:
     docker:
-      - image: circleci/php:7.2
+      - image: circleci/php:7.4
 
     steps:
       - checkout
@@ -34,7 +34,7 @@ jobs:
 
       - run: make check_code_style
       - setup_remote_docker
-      - run: docker build -f Dockerfile_CI -t exerclist .
+      - run: docker build -t exerclist .
       - run: docker run -p 8000:8000 --network=host --name exerclist -d --rm exerclist
       - run: make test
   publish-wip:
@@ -45,7 +45,7 @@ jobs:
       - run:
           name: Build Docker image
           command: |
-            docker build -f Dockerfile_CI -t $IMAGE_NAME:wip .
+            docker build -t $IMAGE_NAME:wip .
       - run:
           name: Publish Docker Image to Docker Hub
           command: |
@@ -59,7 +59,7 @@ jobs:
       - run:
           name: Build Docker image
           command: |
-            docker build -f Dockerfile_CI -t $IMAGE_NAME:master .
+            docker build -t $IMAGE_NAME:master .
       - run:
           name: Publish Docker Image to Docker Hub
           command: |
