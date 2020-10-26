@@ -20,7 +20,7 @@ class WorkoutExerciseEmbeddedForm extends AbstractType
     {
         $this->userId = $security->getUser()->getId();
     }
-    
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
